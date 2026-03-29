@@ -1,36 +1,99 @@
-# NovaCart E-commerce Web App
+# NovaCart Marketplace
 
-NovaCart is a beginner-friendly but structured full-stack e-commerce project built for portfolio use, interview demos, and future business expansion.
+NovaCart is a full-stack e-commerce marketplace application built with `Node.js`, `Express`, `MySQL`, `React`, and `Tailwind CSS`.
+
+It is designed to be:
+
+- strong enough for interviews and portfolio presentation
+- simple enough for beginners to study and extend
+- structured enough to grow into a more serious business project later
+
+## Preview
+
+NovaCart includes:
+
+- a public marketplace storefront
+- product detail pages
+- cart and checkout flow
+- wishlist
+- customer sign up and sign in
+- customer account and order tracking
+- admin dashboard
+- admin product CRUD
+- order management and status updates
+- image uploads
+- MySQL with raw SQL queries
 
 ## Tech Stack
 
-- Backend: Node.js + Express
-- Database: MySQL with raw SQL queries
-- Frontend: React + React Router
-- Styling: Tailwind CSS
+### Frontend
 
-## What This Project Can Do
+- `React`
+- `React Router`
+- `Tailwind CSS`
+- Context API for client-side state
 
-- Admin login and logout
-- Product CRUD
-- Product search and pagination
-- Product image uploads
-- Public storefront
-- Add to cart
-- Basic checkout
-- Admin dashboard with orders, revenue, stock view, and order status control
+### Backend
 
-## Folder Structure
+- `Node.js`
+- `Express`
+- `MySQL`
+- `JWT`
+- `Multer`
+- raw SQL queries with `mysql2`
+
+## Main Features
+
+### Customer Side
+
+- Browse products from a marketplace-style homepage
+- Search products by keyword
+- Filter by category
+- View product details
+- Save items to wishlist
+- Add items to cart
+- Choose delivery zone
+- See checkout totals with delivery and service fees
+- Create customer account
+- Sign in as customer
+- Track orders from account page
+- Track orders by email lookup
+
+### Admin Side
+
+- Secure admin login
+- Admin-only dashboard
+- Create product
+- Edit product
+- Delete product
+- Upload product image
+- View recent orders
+- Change order status
+- Monitor revenue and low-stock items
+
+### Backend / Database
+
+- REST API with Express
+- Proper route/controller/config structure
+- MySQL connection with raw SQL
+- Auto database bootstrap
+- Admin seeding from environment variables
+- Role-based authorization
+- Shared API error handling
+
+## Project Structure
 
 ```text
 TaskManager/
   backend/
     .env.example
+    .env.production.example
     package.json
     src/
       app.js
       server.js
       config/
+        bootstrapDatabase.js
         db.js
         seedAdmin.js
       controllers/
@@ -40,6 +103,7 @@ TaskManager/
       middleware/
         authMiddleware.js
         errorMiddleware.js
+        uploadMiddleware.js
       routes/
         authRoutes.js
         orderRoutes.js
@@ -48,96 +112,96 @@ TaskManager/
     schema.sql
   frontend/
     .env.example
+    .env.production.example
     package.json
     src/
       App.jsx
       main.jsx
       index.css
       components/
-        admin/
-          ProductTable.jsx
-          StatCard.jsx
-        auth/
-          ProtectedRoute.jsx
-        cart/
-          CartItem.jsx
-        layout/
-          AdminLayout.jsx
-          PublicLayout.jsx
-        store/
-          ProductCard.jsx
       context/
-        AuthContext.jsx
-        CartContext.jsx
       pages/
-        AdminDashboardPage.jsx
-        AdminLoginPage.jsx
-        AdminProductsPage.jsx
-        CartPage.jsx
-        NotFoundPage.jsx
-        ProductFormPage.jsx
-        StorefrontPage.jsx
       services/
-        api.js
-        authService.js
-        orderService.js
-        productService.js
+      utils/
   package.json
+  render.yaml
+  README.md
 ```
 
-## Database Design
+## Database Tables
 
-This project uses four core tables:
+NovaCart uses four main tables:
 
-- `users`: stores admin and checkout users with roles
-- `products`: stores items for sale
-- `orders`: stores each order header
-- `order_items`: stores each product inside an order
-
-Important note:
-
-- In this starter, the `users` table is used for both the admin account and checkout customers.
-- The admin user is auto-created from environment variables when the backend starts.
-- The `role` column is already included and is used to separate `admin` users from `customer` users.
-
-## Full SQL Schema
-
-The full SQL schema is in [schema.sql](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/database/schema.sql).
-
-It creates:
-
-- database `ecommerce_app`
 - `users`
 - `products`
 - `orders`
 - `order_items`
 
-It also inserts sample products so the storefront is not empty on first run.
+### users
 
-## Backend API
+- `id`
+- `name`
+- `email`
+- `password`
+- `role`
+- `created_at`
+
+### products
+
+- `id`
+- `name`
+- `price`
+- `category`
+- `image`
+- `stock`
+- `created_at`
+
+### orders
+
+- `id`
+- `user_id`
+- `total_amount`
+- `status`
+- `created_at`
+
+### order_items
+
+- `id`
+- `order_id`
+- `product_id`
+- `quantity`
+
+The full schema is in [database/schema.sql](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/database/schema.sql).
+
+## API Overview
 
 ### Auth
 
 - `POST /api/auth/login`
 - `POST /api/auth/logout`
+- `POST /api/auth/register`
+- `POST /api/auth/customer/login`
+- `GET /api/auth/me`
 
 ### Products
 
 - `GET /api/products`
 - `GET /api/products/:id`
-- `POST /api/products` `admin only`
-- `PUT /api/products/:id` `admin only`
-- `DELETE /api/products/:id` `admin only`
+- `POST /api/products`
+- `PUT /api/products/:id`
+- `DELETE /api/products/:id`
 
 ### Orders
 
 - `POST /api/orders`
-- `GET /api/orders` `admin only`
-- `PATCH /api/orders/:id/status` `admin only`
+- `GET /api/orders`
+- `GET /api/orders/my-orders`
+- `GET /api/orders/lookup?email=...`
+- `PATCH /api/orders/:id/status`
 
-## Example Postman Requests
+## Sample API Requests
 
-### 1. Admin Login
+### Admin Login
 
 ```http
 POST http://localhost:5000/api/auth/login
@@ -149,54 +213,52 @@ Content-Type: application/json
 }
 ```
 
-### 2. Get All Products
+### Customer Registration
 
 ```http
-GET http://localhost:5000/api/products
+POST http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "Password123"
+}
 ```
 
-### 2b. Search And Paginate Products
+### Customer Login
+
+```http
+POST http://localhost:5000/api/auth/customer/login
+Content-Type: application/json
+
+{
+  "email": "john@example.com",
+  "password": "Password123"
+}
+```
+
+### Get Products With Search
 
 ```http
 GET http://localhost:5000/api/products?search=watch&category=Accessories&page=1&limit=6
 ```
 
-### 3. Create Product
+### Create Product
 
 ```http
 POST http://localhost:5000/api/products
-Authorization: Bearer YOUR_TOKEN_HERE
+Authorization: Bearer YOUR_ADMIN_TOKEN
 Content-Type: multipart/form-data
 
 name=Canvas Backpack
-price=85.5
+price=85000
 category=Bags
 stock=20
 image=(select a file)
 ```
 
-### 4. Update Product
-
-```http
-PUT http://localhost:5000/api/products/1
-Authorization: Bearer YOUR_TOKEN_HERE
-Content-Type: multipart/form-data
-
-name=Canvas Backpack Pro
-price=95
-category=Bags
-stock=14
-image=(optional new file)
-```
-
-### 5. Delete Product
-
-```http
-DELETE http://localhost:5000/api/products/1
-Authorization: Bearer YOUR_TOKEN_HERE
-```
-
-### 6. Create Order
+### Create Order
 
 ```http
 POST http://localhost:5000/api/orders
@@ -217,85 +279,56 @@ Content-Type: application/json
 }
 ```
 
-### 7. Get Orders
+### Lookup Orders By Email
 
 ```http
-GET http://localhost:5000/api/orders
-Authorization: Bearer YOUR_TOKEN_HERE
-```
-
-### 8. Update Order Status
-
-```http
-PATCH http://localhost:5000/api/orders/1/status
-Authorization: Bearer YOUR_TOKEN_HERE
-Content-Type: application/json
-
-{
-  "status": "shipped"
-}
+GET http://localhost:5000/api/orders/lookup?email=customer@example.com
 ```
 
 ## How Frontend Connects To Backend
 
-The frontend talks to the backend through the files in `frontend/src/services`.
+The frontend talks to the backend through the service layer in `frontend/src/services`.
 
-- [api.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/api.js)
-  This file stores the base backend URL and contains the shared `fetch()` logic.
+- [frontend/src/services/api.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/api.js)
+  Shared API helper and base URL logic
 
-- [authService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/authService.js)
-  This file calls the login and logout API.
+- [frontend/src/services/authService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/authService.js)
+  Admin auth and customer auth requests
 
-- [productService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/productService.js)
-  This file fetches, searches, paginates, creates, updates, and deletes products.
+- [frontend/src/services/productService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/productService.js)
+  Product fetch, search, filter, create, update, delete
 
-- [orderService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/orderService.js)
-  This file creates orders and fetches orders for the admin dashboard.
+- [frontend/src/services/orderService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/orderService.js)
+  Checkout, admin order management, customer order history, and order lookup
 
-The backend URL is controlled by:
-
-- [frontend/.env.example](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/.env.example)
-- [frontend/.env](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/.env)
-
-Default value:
+Frontend backend URL:
 
 ```env
 VITE_API_URL=http://localhost:5000/api
 ```
 
-## How To Run The Project Step By Step
+## Local Setup
 
-### Step 1. Create the database
-
-Open MySQL and run the SQL inside:
-
-- [schema.sql](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/database/schema.sql)
-
-This creates the `ecommerce_app` database and all tables.
-
-### Step 2. Install all dependencies
-
-From the root folder:
+### 1. Clone the repo
 
 ```powershell
-cd C:\Users\Abdul Mannan\OneDrive\Documents\TaskManager
-npm.cmd install
+git clone https://github.com/TechSageHub/ecommerce-marketplace-app.git
+cd ecommerce-marketplace-app
 ```
 
-If needed, also install package dependencies inside backend and frontend:
+### 2. Install dependencies
 
 ```powershell
+npm.cmd install
 npm.cmd --prefix backend install
 npm.cmd --prefix frontend install
 ```
 
-### Step 3. Configure backend environment
+### 3. Configure backend environment
 
-The backend environment file is:
+Create `backend/.env` from [backend/.env.example](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/.env.example).
 
-- [backend/.env](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/.env)
-
-Main values:
+Example:
 
 ```env
 PORT=5000
@@ -308,363 +341,291 @@ DB_NAME=ecommerce_app
 JWT_SECRET=super_secret_local_jwt_key_change_me
 ADMIN_EMAIL=admin@yourstore.com
 ADMIN_PASSWORD=Admin123!
+BACKEND_URL=http://localhost:5000
 ```
 
-### Step 4. Start the backend
+### 4. Create the database
+
+Run the SQL in [database/schema.sql](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/database/schema.sql).
+
+Important:
+
+- the backend can also auto-bootstrap missing tables
+- sample products are inserted for first-time use
+
+### 5. Start the app
+
+From the root:
 
 ```powershell
-cd C:\Users\Abdul Mannan\OneDrive\Documents\TaskManager\backend
 npm.cmd run dev
 ```
 
-Backend URL:
-
-- [http://localhost:5000](http://localhost:5000)
-
-### Step 5. Start the frontend
-
-Open a new terminal:
+Or separately:
 
 ```powershell
-cd C:\Users\Abdul Mannan\OneDrive\Documents\TaskManager\frontend
+cd backend
 npm.cmd run dev
 ```
 
-Frontend URL:
+```powershell
+cd frontend
+npm.cmd run dev
+```
 
-- usually [http://localhost:5173](http://localhost:5173)
+### 6. Open the app
 
-### Step 6. Login to admin
+- Frontend: [http://localhost:5173](http://localhost:5173)
+- Backend API: [http://localhost:5000](http://localhost:5000)
 
-Use:
+### 7. Admin credentials
 
 - Email: `admin@yourstore.com`
 - Password: `Admin123!`
 
-The backend creates this user automatically the first time it starts, based on the values in `.env`.
+## Production / Deployment
 
-## Role-Based Access
+This project is prepared for a simple single-service deployment flow.
 
-- Admin users can log in to the dashboard.
-- Customer users are created automatically during checkout if their email does not exist yet.
-- Product create, update, delete, and order listing routes are protected for admins only.
-- Public shoppers can still browse products and place orders without admin login.
+### Root scripts
 
-## Order Status Flow
+- `npm.cmd run dev`
+- `npm.cmd run dev:backend`
+- `npm.cmd run dev:frontend`
+- `npm.cmd run build`
+- `npm.cmd run start`
+- `npm.cmd run start:prod`
 
-- New orders start as `pending`.
-- Admins can change order status to `paid`, `shipped`, `delivered`, or `cancelled`.
-- The admin dashboard shows the current status for each recent order.
-- This makes the app feel more like a real store back office.
-
-## Product Image Uploads
-
-- Admin product forms now accept image files instead of only pasted URLs.
-- Uploaded files are stored in the local `uploads` folder on the backend.
-- The backend serves them from `/uploads/...`.
-- Sample seeded products still use remote image URLs, so both styles work.
-
-### Step 7. Try the app
-
-1. Open the storefront.
-2. Add products to the cart.
-3. Go to checkout and place an order.
-4. Open the admin login page.
-5. Login and view the dashboard.
-6. Create, edit, and delete products.
-7. Search products and move through paginated results.
-
-## Run Both From Root Folder
-
-You can also run both apps from the root workspace:
+### Build for production
 
 ```powershell
-cd C:\Users\Abdul Mannan\OneDrive\Documents\TaskManager
-npm.cmd run dev
-```
-
-This uses the root [package.json](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/package.json).
-
-## Deployment Setup
-
-This project is now prepared for a simple one-service deployment flow:
-
-- Build the React frontend
-- Serve the built frontend from the Express backend
-- Expose API routes and uploaded images from the same backend server
-
-### Production Build Commands
-
-From the root folder:
-
-```powershell
-cd C:\Users\Abdul Mannan\OneDrive\Documents\TaskManager
 npm.cmd run build
 npm.cmd run start
 ```
 
-Useful root scripts:
-
-- `npm.cmd run build`
-  Builds the frontend into `frontend/dist`
-- `npm.cmd run start`
-  Starts the backend in production mode
-- `npm.cmd run start:prod`
-  Builds the frontend and then starts the backend
-
-### Health Check
-
-The backend now exposes:
+### Health endpoint
 
 ```http
 GET /api/health
 ```
 
-### Render Deployment
-
-The project includes:
+### Deployment files
 
 - [render.yaml](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/render.yaml)
-
-This file gives you a starter config for deploying to Render as one Node service.
-
-### Production Environment Examples
-
 - [backend/.env.production.example](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/.env.production.example)
 - [frontend/.env.production.example](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/.env.production.example)
 
-Important production note:
+## File Guide
 
-- In production, the frontend can use `VITE_API_URL=/api` because Express serves both the frontend and backend from the same domain.
-
-## Simple Explanation Of Each File
-
-### Root files
+### Root
 
 [package.json](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/package.json)
 
-- This file helps run backend and frontend together from the root folder.
-- It also includes build and production start scripts.
+- Runs frontend and backend from one root command
 
 [.gitignore](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/.gitignore)
 
-- This file tells Git to ignore `node_modules`, environment files, and other generated folders.
+- Ignores `node_modules`, `.env`, uploads, and local generated files
 
 [render.yaml](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/render.yaml)
 
-- This file is a deployment starter for Render.
-- It defines build command, start command, and environment variables.
+- Starter deployment config for Render
 
-### Database files
-
-[schema.sql](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/database/schema.sql)
-
-- This file creates the full MySQL database schema.
-- It also adds starter products so the UI has real content.
-
-### Backend files
-
-[backend/package.json](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/package.json)
-
-- This file lists backend dependencies like Express, MySQL, JWT, and bcrypt.
-
-[backend/.env.example](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/.env.example)
-
-- This file shows which backend environment variables are needed.
-
-[backend/.env.production.example](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/.env.production.example)
-
-- This file shows example backend values for production deployment.
+### Backend
 
 [backend/src/app.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/app.js)
 
-- This file creates the Express app.
-- It loads middleware and API routes.
-- It also serves uploaded product images from the `uploads` folder.
-- In production, it can also serve the built React app from `frontend/dist`.
+- Creates the Express app
+- Loads middleware and routes
+- Serves uploaded images
+- Serves frontend build in production
 
 [backend/src/server.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/server.js)
 
-- This file starts the server.
-- It checks the database and seeds the admin user.
+- Starts the backend server
+- Runs database bootstrap and admin seed
+
+[backend/src/config/bootstrapDatabase.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/config/bootstrapDatabase.js)
+
+- Creates database tables if missing
+- Adds missing columns for compatibility
+- Seeds starter products
 
 [backend/src/config/db.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/config/db.js)
 
-- This file creates the MySQL connection pool.
+- Creates the MySQL connection pool
 
 [backend/src/config/seedAdmin.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/config/seedAdmin.js)
 
-- This file checks whether the admin user exists.
-- If not, it creates the admin user from `.env`.
+- Ensures the admin user exists
 
 [backend/src/controllers/authController.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/controllers/authController.js)
 
-- This file handles login and logout.
+- Handles admin login
+- Handles customer registration/login
+- Returns JWT tokens
+- Returns current authenticated user
 
 [backend/src/controllers/productController.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/controllers/productController.js)
 
-- This file contains SQL logic for products.
-- It handles create, read, update, delete, search, pagination, and uploaded image paths.
-
-[backend/src/middleware/uploadMiddleware.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/middleware/uploadMiddleware.js)
-
-- This file handles image uploads with Multer.
-- It stores files inside the backend `uploads` folder.
+- Handles raw SQL product CRUD
+- Handles search and pagination
+- Handles image paths and file uploads
 
 [backend/src/controllers/orderController.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/controllers/orderController.js)
 
-- This file handles checkout and order history.
-- It uses a transaction so orders stay consistent.
-- It also handles order status updates.
+- Handles checkout transactions
+- Handles admin order listing
+- Handles customer order history
+- Handles public order lookup
+- Handles status updates
 
 [backend/src/middleware/authMiddleware.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/middleware/authMiddleware.js)
 
-- This file checks the JWT token before protected routes.
+- Verifies JWT token
+- Restricts admin-only routes
 
-[backend/src/middleware/errorMiddleware.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/middleware/errorMiddleware.js)
+[backend/src/middleware/uploadMiddleware.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/middleware/uploadMiddleware.js)
 
-- This file handles missing routes and server errors in one place.
+- Handles Multer image uploads
 
 [backend/src/routes/authRoutes.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/routes/authRoutes.js)
 
-- This file connects auth URLs to auth controller functions.
+- Maps auth URLs to auth controller actions
 
 [backend/src/routes/productRoutes.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/routes/productRoutes.js)
 
-- This file connects product URLs to product controller functions.
+- Maps product URLs to product controller actions
 
 [backend/src/routes/orderRoutes.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/backend/src/routes/orderRoutes.js)
 
-- This file connects order URLs to order controller functions.
+- Maps order URLs to order controller actions
 
-### Frontend files
-
-[frontend/package.json](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/package.json)
-
-- This file lists frontend dependencies like React, Router, Vite, and Tailwind.
-
-[frontend/.env.production.example](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/.env.production.example)
-
-- This file shows the production frontend API setting.
-- It points to `/api` so frontend and backend can share one domain in deployment.
+### Frontend
 
 [frontend/src/main.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/main.jsx)
 
-- This file starts the React app.
-- It wraps the app with router, auth context, and cart context.
+- Starts React
+- Wraps the app with router and global providers
 
 [frontend/src/App.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/App.jsx)
 
-- This file defines all frontend routes.
+- Defines all public and admin routes
 
 [frontend/src/index.css](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/index.css)
 
-- This file loads Tailwind and the shared page styling.
+- Shared Tailwind base and global styling
 
 [frontend/src/context/AuthContext.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/context/AuthContext.jsx)
 
-- This file stores the logged-in admin token and user in local storage.
+- Stores logged-in user and token
+- Handles customer/admin role flags
 
 [frontend/src/context/CartContext.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/context/CartContext.jsx)
 
-- This file stores the shopping cart in local storage.
+- Stores cart items in local storage
 
-[frontend/src/services/api.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/api.js)
+[frontend/src/context/WishlistContext.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/context/WishlistContext.jsx)
 
-- This file contains the shared API request helper.
+- Stores wishlist items in local storage
 
-[frontend/src/services/authService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/authService.js)
+[frontend/src/context/DeliveryContext.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/context/DeliveryContext.jsx)
 
-- This file sends auth requests to the backend.
+- Stores selected delivery zone across the app
 
-[frontend/src/services/productService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/productService.js)
+[frontend/src/context/ToastContext.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/context/ToastContext.jsx)
 
-- This file sends product requests to the backend, including search filters, pagination values, and multipart upload form data.
-
-[frontend/src/components/common/Pagination.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/common/Pagination.jsx)
-
-- This reusable component shows previous, next, and page number buttons.
-
-[frontend/src/utils/getImageUrl.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/utils/getImageUrl.js)
-
-- This small helper turns relative uploaded image paths into full browser URLs.
-
-[frontend/src/services/orderService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/orderService.js)
-
-- This file sends order requests to the backend, including status updates.
-
-[frontend/src/components/auth/ProtectedRoute.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/auth/ProtectedRoute.jsx)
-
-- This file protects admin pages.
-- If the admin is not logged in, it redirects to login.
+- Shows loading, success, and error toast messages
 
 [frontend/src/components/layout/PublicLayout.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/layout/PublicLayout.jsx)
 
-- This is the public storefront layout and top navigation.
+- Marketplace-style public header, footer, delivery selector, and search
 
 [frontend/src/components/layout/AdminLayout.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/layout/AdminLayout.jsx)
 
-- This is the admin dashboard layout with sidebar navigation.
-
-[frontend/src/components/admin/StatCard.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/admin/StatCard.jsx)
-
-- This small component shows one dashboard statistic card.
-
-[frontend/src/components/admin/OrderStatusBadge.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/admin/OrderStatusBadge.jsx)
-
-- This small component gives each order status a clear colored badge.
-
-[frontend/src/components/admin/ProductTable.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/admin/ProductTable.jsx)
-
-- This component shows the admin product table.
-
-[frontend/src/components/store/ProductCard.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/store/ProductCard.jsx)
-
-- This component shows one storefront product card.
-
-[frontend/src/components/cart/CartItem.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/components/cart/CartItem.jsx)
-
-- This component shows one item inside the shopping cart.
+- Admin dashboard shell and nav
 
 [frontend/src/pages/StorefrontPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/StorefrontPage.jsx)
 
-- This page shows products for shoppers with search, category filter, and pagination.
+- Homepage with categories, promotions, product sections, and search
+
+[frontend/src/pages/ProductDetailPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/ProductDetailPage.jsx)
+
+- Product detail view with wishlist, quantity, related items, and delivery info
 
 [frontend/src/pages/CartPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/CartPage.jsx)
 
-- This page shows the cart and checkout form.
+- Cart, delivery zone selection, and checkout total breakdown
 
-[frontend/src/pages/AdminLoginPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/AdminLoginPage.jsx)
+[frontend/src/pages/WishlistPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/WishlistPage.jsx)
 
-- This page lets the admin log in.
+- Saved products page
+
+[frontend/src/pages/CustomerAuthPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/CustomerAuthPage.jsx)
+
+- Customer sign in and registration page
+
+[frontend/src/pages/AccountPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/AccountPage.jsx)
+
+- Customer account page and order tracking page
 
 [frontend/src/pages/AdminDashboardPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/AdminDashboardPage.jsx)
 
-- This page shows revenue, orders, inventory information, and lets the admin update order statuses.
+- Revenue, orders, inventory alerts, and status updates
 
 [frontend/src/pages/AdminProductsPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/AdminProductsPage.jsx)
 
-- This page lists all products for the admin and supports search plus pagination.
+- Admin product list with search and pagination
 
 [frontend/src/pages/ProductFormPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/ProductFormPage.jsx)
 
-- This page is used for both adding and editing products.
-- It now supports image file uploads and live preview.
+- Create/edit product form with image preview
 
-[frontend/src/pages/NotFoundPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/NotFoundPage.jsx)
+[frontend/src/pages/AdminLoginPage.jsx](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/pages/AdminLoginPage.jsx)
 
-- This page handles unknown URLs.
+- Admin login screen
+
+[frontend/src/services/api.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/api.js)
+
+- Shared `fetch()` helper for API requests
+
+[frontend/src/services/authService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/authService.js)
+
+- Admin auth and customer auth API requests
+
+[frontend/src/services/productService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/productService.js)
+
+- Product requests and query params
+
+[frontend/src/services/orderService.js](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/frontend/src/services/orderService.js)
+
+- Checkout, account orders, admin orders, and order lookup requests
 
 ## Why This Project Is Good For Interviews
 
-- It uses a real backend and database flow.
-- It shows auth, CRUD, checkout, and dashboard features.
-- It includes role-based authorization, which is important for real business apps.
-- It uses raw SQL, which shows database understanding.
-- It has a folder structure closer to real production projects.
-- It can be extended later with payments, image uploads, customer auth, roles, and deployment.
+- Shows full-stack thinking, not just UI work
+- Uses a real database with raw SQL
+- Includes auth, CRUD, checkout, order tracking, and dashboard features
+- Separates admin and customer experiences
+- Includes marketplace-style UX patterns
+- Uses structured folders and reusable frontend components
+- Can be demoed immediately and extended further
 
-## Good Next Upgrades
+## Suggested Next Improvements
 
-- Add payment integration
-- Add deployment with Railway or VPS hosting
+- Payment integration with Stripe or Paystack
+- Email notifications for new orders
+- Seller/store pages
+- Product reviews and ratings
+- Coupons and discount codes
+- Live deployment with production MySQL database
+- Screenshots and GIFs in this README
+
+## Author Notes
+
+This project was built as a portfolio-ready marketplace application and can be a good base for:
+
+- internship and junior frontend/backend interviews
+- full-stack portfolio presentations
+- learning Express + MySQL + React together
+- future expansion into a more business-focused store
