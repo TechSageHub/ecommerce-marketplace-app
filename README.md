@@ -42,7 +42,7 @@ For local demo:
 
 ## Screenshots
 
-You can add real screenshots later inside a `screenshots/` folder and link them here.
+Add real screenshots inside the [screenshots](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/screenshots/README.md) folder and link them here.
 
 Suggested captures:
 
@@ -52,6 +52,24 @@ Suggested captures:
 - Customer account page
 - Admin dashboard
 - Admin product management page
+
+Suggested filenames:
+
+- `screenshots/storefront-home.png`
+- `screenshots/product-detail.png`
+- `screenshots/wishlist.png`
+- `screenshots/cart-checkout.png`
+- `screenshots/customer-account.png`
+- `screenshots/admin-dashboard.png`
+- `screenshots/admin-products.png`
+
+## Interview Demo Script
+
+A ready-to-use walkthrough is available in [docs/interview-demo-script.md](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/docs/interview-demo-script.md).
+
+## GitHub Branding
+
+Suggested GitHub About text, topics, and pinned-project wording are available in [docs/github-branding.md](C:/Users/Abdul%20Mannan/OneDrive/Documents/TaskManager/docs/github-branding.md).
 
 ## Tech Stack
 
