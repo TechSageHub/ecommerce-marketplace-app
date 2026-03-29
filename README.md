@@ -1,4 +1,11 @@
+![NovaCart Banner](./assets/banner.svg)
+
 # NovaCart Marketplace
+
+[![Frontend](https://img.shields.io/badge/Frontend-React-61dafb?style=for-the-badge&logo=react&logoColor=061a22)](https://react.dev/)
+[![Backend](https://img.shields.io/badge/Backend-Express-111111?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Database](https://img.shields.io/badge/Database-MySQL-0f5d8c?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Styling](https://img.shields.io/badge/UI-Tailwind_CSS-06b6d4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 
 NovaCart is a full-stack e-commerce marketplace application built with `Node.js`, `Express`, `MySQL`, `React`, and `Tailwind CSS`.
 
@@ -23,6 +30,28 @@ NovaCart includes:
 - order management and status updates
 - image uploads
 - MySQL with raw SQL queries
+
+## Live Demo
+
+Live deployment is not attached yet.
+
+For local demo:
+
+- Frontend: `http://localhost:5173`
+- Backend: `http://localhost:5000`
+
+## Screenshots
+
+You can add real screenshots later inside a `screenshots/` folder and link them here.
+
+Suggested captures:
+
+- Storefront homepage
+- Product detail page
+- Cart / checkout page
+- Customer account page
+- Admin dashboard
+- Admin product management page
 
 ## Tech Stack
 

@@ -1,0 +1,50 @@
+<svg width="1280" height="640" viewBox="0 0 1280 640" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1280" height="640" rx="36" fill="#111111"/>
+  <rect width="1280" height="640" rx="36" fill="url(#paint0_radial)"/>
+  <rect width="1280" height="640" rx="36" fill="url(#paint1_radial)"/>
+  <rect x="54" y="54" width="1172" height="532" rx="28" fill="url(#paint2_linear)" stroke="rgba(255,255,255,0.12)"/>
+  <rect x="94" y="122" width="240" height="380" rx="26" fill="#FFF7EF" fill-opacity="0.95"/>
+  <rect x="368" y="122" width="524" height="206" rx="30" fill="#1B1B1B"/>
+  <rect x="368" y="352" width="248" height="150" rx="26" fill="#FFF7EF" fill-opacity="0.96"/>
+  <rect x="644" y="352" width="248" height="150" rx="26" fill="#FFF7EF" fill-opacity="0.96"/>
+  <rect x="928" y="122" width="256" height="380" rx="26" fill="#FFF7EF" fill-opacity="0.95"/>
+  <circle cx="1060" cy="220" r="88" fill="#F68B1E" fill-opacity="0.18"/>
+  <circle cx="246" cy="458" r="72" fill="#F68B1E" fill-opacity="0.14"/>
+  <text x="114" y="174" fill="#8B6E4A" font-family="Georgia, serif" font-size="18" letter-spacing="6">MARKETPLACE</text>
+  <text x="114" y="232" fill="#151515" font-family="Georgia, serif" font-size="42" font-weight="700">NovaCart</text>
+  <text x="114" y="272" fill="#5F564D" font-family="Georgia, serif" font-size="20">Storefront, admin dashboard,</text>
+  <text x="114" y="302" fill="#5F564D" font-family="Georgia, serif" font-size="20">customer auth, checkout, and tracking</text>
+  <text x="398" y="192" fill="#F0C78B" font-family="Georgia, serif" font-size="18" letter-spacing="6">FULL-STACK E-COMMERCE</text>
+  <text x="398" y="258" fill="#FFF7EF" font-family="Georgia, serif" font-size="54" font-weight="700">Marketplace App</text>
+  <text x="398" y="304" fill="#D9D0C6" font-family="Georgia, serif" font-size="24">Built with React, Express, MySQL, and Tailwind CSS</text>
+  <rect x="398" y="370" width="184" height="42" rx="21" fill="#F68B1E"/>
+  <text x="434" y="397" fill="white" font-family="Georgia, serif" font-size="18" font-weight="700">Interview Ready</text>
+  <text x="396" y="446" fill="#151515" font-family="Georgia, serif" font-size="28" font-weight="700">Storefront</text>
+  <text x="396" y="478" fill="#5F564D" font-family="Georgia, serif" font-size="18">Wishlist, detail pages,</text>
+  <text x="396" y="504" fill="#5F564D" font-family="Georgia, serif" font-size="18">cart, checkout, account</text>
+  <text x="672" y="446" fill="#151515" font-family="Georgia, serif" font-size="28" font-weight="700">Admin</text>
+  <text x="672" y="478" fill="#5F564D" font-family="Georgia, serif" font-size="18">Products, orders,</text>
+  <text x="672" y="504" fill="#5F564D" font-family="Georgia, serif" font-size="18">status updates, analytics</text>
+  <text x="956" y="182" fill="#8B6E4A" font-family="Georgia, serif" font-size="16" letter-spacing="5">HIGHLIGHTS</text>
+  <text x="956" y="234" fill="#151515" font-family="Georgia, serif" font-size="24" font-weight="700">Customer Auth</text>
+  <text x="956" y="268" fill="#5F564D" font-family="Georgia, serif" font-size="18">Sign up, sign in,</text>
+  <text x="956" y="294" fill="#5F564D" font-family="Georgia, serif" font-size="18">tracked orders</text>
+  <text x="956" y="356" fill="#151515" font-family="Georgia, serif" font-size="24" font-weight="700">Raw SQL + MySQL</text>
+  <text x="956" y="390" fill="#5F564D" font-family="Georgia, serif" font-size="18">No ORM, cleaner backend</text>
+  <text x="956" y="452" fill="#151515" font-family="Georgia, serif" font-size="24" font-weight="700">Portfolio Focus</text>
+  <text x="956" y="486" fill="#5F564D" font-family="Georgia, serif" font-size="18">Structured for interviews</text>
+  <defs>
+    <radialGradient id="paint0_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(235 86) rotate(45) scale(580 420)">
+      <stop stop-color="#F68B1E" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#F68B1E" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="paint1_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(1120 126) rotate(130) scale(520 380)">
+      <stop stop-color="#DB6C4B" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#DB6C4B" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paint2_linear" x1="86" y1="70" x2="1174" y2="578" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#231A15"/>
+      <stop offset="1" stop-color="#111111"/>
+    </linearGradient>
+  </defs>
+</svg>
