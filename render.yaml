@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: novacart-app
+    env: node
+    plan: free
+    rootDir: .
+    buildCommand: npm install && npm --prefix backend install && npm --prefix frontend install && npm --prefix frontend run build
+    startCommand: npm --prefix backend run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: FRONTEND_URL
+        sync: false
+      - key: BACKEND_URL
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_NAME
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false

@@ -1,0 +1,62 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --page-cream: #f7f1e8;
+  --page-ivory: #fffaf4;
+  --page-ink: #151515;
+  --page-stone: #6e675f;
+  --accent-gold: #c9862a;
+  --accent-coral: #db6c4b;
+  --admin-night: #111827;
+  --admin-panel: #182235;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: Georgia, "Times New Roman", serif;
+  background:
+    radial-gradient(circle at top, rgba(201, 134, 42, 0.16), transparent 28%),
+    radial-gradient(circle at 85% 15%, rgba(219, 108, 75, 0.12), transparent 22%),
+    linear-gradient(180deg, var(--page-ivory) 0%, var(--page-cream) 42%, #efe7dc 100%);
+  color: var(--page-ink);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+::selection {
+  background: rgba(201, 134, 42, 0.28);
+  color: #151515;
+}
+
+.toast-progress {
+  animation: toast-progress linear forwards;
+  animation-duration: 3.2s;
+}
+
+@keyframes toast-progress {
+  from {
+    transform: scaleX(1);
+  }
+
+  to {
+    transform: scaleX(0);
+  }
+}
